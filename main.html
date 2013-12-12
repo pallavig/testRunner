@@ -1,0 +1,78 @@
+<html>
+<head>
+	<title>Test Runner</title>
+	<link rel="stylesheet" type="text/css" href="./css/default.css">
+</head>
+<body>
+	<div id ="header">
+		<h1>Test Runner</h1>
+	</div>
+	<div id="ChooseFile">
+		<input type="file" id="fileDialog" onchange="showTestCases()">
+		<input type="button" id="runAll" onClick="executeAll()" value = "run All"> 
+		<input type="button" id="runSelected" onClick="executeSelected()" value = "run Selected"> 
+	</div>
+	<div id="tests">
+	</div>
+</body>
+<script type="text/javascript">
+	var test;
+	var testCases;
+	var testDiv;
+	var displayNames = function(name){
+		testDiv = document.getElementById('tests');
+		var checkbox = document.createElement('input');
+		checkbox.type = 'checkbox';
+		checkbox.id = name;
+		var testName = document.createElement('label');
+		testName.class = "testName";
+		testName.id = name + "1";
+		testName.textContent = name;
+		// var testStatus = document.createElement('label')
+		// testStatus.class = "testStatus";
+		// testStatus.id = name + "2";
+		var br = document.createElement('br');
+		testDiv.appendChild(checkbox);
+		testDiv.appendChild(testName);
+		// testDiv.appendChild(testStatus);
+		testDiv.appendChild(br);
+		document.body.appendChild(testDiv);
+		var breakStatement = document.createElement('br');
+		testDiv.appendChild(breakStatement);
+	};
+	var showTestCases = function(name){
+		var testFileName = document.getElementById('fileDialog').value;
+		alert(testFileName);
+		// while(testDiv.hasChildNodes){
+		// 	document.write("hello  ")
+		// 	testDiv.removeChild(testDiv.lastChild);
+		// }
+		test = require(testFileName).test;
+		testCases = Object.keys(test);
+		testCases.forEach(displayNames);
+	};
+	var execute = function(functionName){
+		var cb = document.getElementById(functionName);
+		testDiv.removeChild(cb);
+		var testName = document.getElementById(functionName + '1');
+		try {
+			test[functionName]();
+			testName.style.background = "#D7FAEE";
+		}
+		catch(e){
+			testName.style.background = "#F7B0B3";
+		}
+	};
+	var executeAll = function(){
+		testCases.forEach(execute);
+	};
+	var getSelected = function(name){
+		var checkbox = document.getElementById(name);
+		if(checkbox.checked)
+			execute(name);
+	};
+	var executeSelected = function(){
+		testCases.forEach(getSelected);
+	};
+</script>
+</html>
